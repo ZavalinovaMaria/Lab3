@@ -1,84 +1,103 @@
-import Humanity.*;
-import Humanity.Enums.Body;
-import Humanity.Enums.Condition;
-import Humanity.Enums.Direction;
-import Humanity.Enums.HeadPosition;
-import Subject.*;
-import Subject.Lights.Fake_light;
-import Subject.Lights.Natural_light;
-import Subject.Tree.Stvol;
-import Subject.Tree.Trees;
-import Subject.Tree.Vetki;
-import World.*;
+import exception.*;
+import humans.*;
+import humans.enums.*;
+import subject.*;
+import subject.lights.*;
+import world.*;
 
 
 public class Main {
     public static void main(String[] args) {
-        World world = new World();
+        World world = new World(Day_time.NIGHT);
         Luis l = new Luis("Luis",0,0);
+
         Dgud d = new Dgud("Dgud",0,0);
-        Fake_light luchfonara = new Fake_light("Луч фонаря ");
-        Natural_light luch =new Natural_light("Cвет");
-        Vetki vetka = new Vetki("ветки");
-        Valeshnik valeshnik = new Valeshnik();
-        Bones bones =new Bones();
-        Trees trees = new Trees("деревья");
-        Stvol stvol = new Stvol("ствол");
-        Patno patno = new Patno(30,100);
+        Fake_light flashlight = new Fake_light("Луч фонаря ");
+        Natural_light ray =new Natural_light("Cвет");
+        Light.Spot spot = new Light.Spot(30,100);
+
+        Brushwood brushwood = new Brushwood();
+        Tree trees = new Tree("деревья",30);
+        Tree.Trunk trunk = trees.new Trunk("ствол",10);
+        Tree.Branch branch = trees.new Branch("ветка",5);
         Author author = new Author();
         Wind wind = new Wind();
-        Pakagee pakagee = new Pakagee(Body.R_ARM);
-        Lopata lopata =new Lopata(Body.L_ARM);
+
+        world.putPlaces(Place.BORDER,Place.TOP,Place.CENTRE_OF_HEAP,Place.FLASHLIGHT);
         world.putPeople(l,d);
 
+        Subjects bag = new Subjects("пакет ");
+        Subjects shovel = new Subjects("лопата ");
+        Subjects bones= new Subjects("костей ");
+
+        Luis.RightArm arm1 =  l. new RightArm();
+        Luis.LeftArm arm2 =  l. new LeftArm();
+        l.takeToArm(arm1,bag);
+        l.takeToArm(arm2,shovel);
+
         l.thinking("Это сон, я так и не проснулся после дневного праздничного обеда");
-        l.decides("Ни за что больше не подойду к этому валежнику.");
+        l.decides("Ни за что больше не подойду к этому валежнику");
         d.go(Direction.LEFT);
         l.go(Direction.LEFT);
 
-        luchfonara.shine(bones,trees,vetka);
-        l.chekplace();
-        d.chekplace();
-        patno.newview(l,d);
+
+        flashlight.shine(bones,trees,branch);
+
+
+        spot.newView(l,d);
 
         d.go(Direction.RIGHT);
         d.setCondition(Condition.CONFIDENCE);
-
         d.go(Direction.UP);
-        d.ConfidenceMan();
+        d.move();
         l.goAfter(l,d);
-
         l.look();
         l.setCondition(Condition.CONFIDENCE);
-        l.ConfidenceMan();
+        l.move();
         author.comment("Это, конечно, было так же глупо, как верить в охранительную силу медальона или крестика. Но это действовало.");
-        valeshnik.applyDamage(l);
-        vetka.sound(l);
-        stvol.sound(l);
+        brushwood.applyDamage(l);
+        trunk.makeSound();
+        try{
+            l.hear(trunk);}
+        catch (LowSoundException e){
+            System.out.println(e.getMessage());
+        }
+        branch.makeSound();
+        try{
+            l.hear(branch);}
+        catch (LowSoundException e){
+            System.out.println(e.getMessage());
+        }
         l.fall();
-        wind.howl(vetka,trees);
+        wind.howl(branch,trees);
 
-        d.stand(stvol);
-        l.see(d);
+        d.stand(trunk);
+        l.see(d,world);
         d.go(Direction.DOWN);
-        luch.shine(vetka);
+        ray.shine(branch);
         author.comment("Да, это была именно граница — зачем это скрывать?");
-
-        l.chekplace();
-        l.stand(stvol);
+        l.checkplace();
+        l.stand(trunk);
         l.turnHead(HeadPosition.DOWN);
         l.look();
-        l.exchange(lopata,pakagee);
+        l.replaceSubjects(arm1,arm2);
+
 
         l.turnHead(HeadPosition.TO_SIDE);
         l.feel();
         wind.touch(l);
         l.thinking("Холодный, чистый... всегда неизменный.");
+        l.setCondition(Condition.UNSERTAIN);
         l.go(Direction.DOWN);
-        l.setCondition(Condition.INATTENTIVE);
-        vetka.sound(l);
-        l.WarinesseMan();
+        branch.makeSound();
+       try{
+           l.hear(branch);}
+       catch (LowSoundException e){
+           System.out.println(e.getMessage());
+       }
+        l.move();
         l.fall();
         l.sighed();
+
     }
 }

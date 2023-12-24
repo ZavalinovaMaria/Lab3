@@ -1,0 +1,226 @@
+@startuml
+enum humans.enums.Body {
++  LEGS
++  HAIR
+- String bodypart
++ String toString()
+}
+class subject.Tree {
+~ String title
++ double volume
++ void makeSound()
++ String hasTitle()
++ String toString()
+}
+class subject.Tree$Trunk {
++ String toString()
+}
+class subject.Tree$Branch {
++ String toString()
++ String anotherForm()
++ String anotherForm2()
+}
+class subject.Noise {
+~ double probability
+}
+class subject.Brushwood {
++ void applyDamage(Human)
++ String toString()
+}
+interface humans.interfaces.Walk {
+~ void go(Direction)
+}
+abstract class humans.Human {
++ String name
+- int x
+- int y
+# int health
+# Condition condition
+# Place place
+# HeadPosition position
+~ Medicine pill
+~ Medicine potion
++ String getName()
++ Condition getCondition()
++ void setCondition(Condition)
++ Place getPlace()
++ void setPlace(Place)
++ int getHealth()
++ void setHealth(double)
++ int getx()
++ int gety()
++ void setx(int)
++ void sety(int)
++ HeadPosition getHeadPosition()
++ void setHeadPosition(HeadPosition)
++ void turnHead(HeadPosition)
++ void go(Direction)
++ void checkplace()
++ void chekUnknownPlace()
++ {abstract}void move()
++ {abstract}void stand(Tree)
++ {abstract}void see(Human,World)
++ void goAfter(Human,Human)
++ void hear(Tree)
++ void checkhealth()
++ void takepill()
++ void takeToArm(Human.RightArm,Subjects)
++ void takeToArm(Human.LeftArm,Subjects)
++ void replaceSubjects(Human.RightArm,Human.LeftArm)
++ String toString()
++ int hashCode()
++ boolean equals(Object)
+}
+interface humans.Human$Medicine {
++ void recoverhealth()
+}
+class humans.Human$LeftArm {
++ ArrayList<Subjects> leftArms
++ void haveSubject(Subjects)
++ int hashCode()
+}
+class humans.Human$RightArm {
++ ArrayList<Subjects> rightArms
++ void haveSubject(Subjects)
+}
+abstract class subject.lights.Light {
+# int brightness
+~ String name
+# int T
++ String lightCharacteristic()
+}
+class subject.lights.Light$Spot {
+- int size
+- int brightness
++ int getSize()
++ int getBrightness()
++ void setSize(int)
++ void setBrightness(int)
++ void newView(Human,Human)
++ String toString()
+}
+class Main {
++ {static} void main(String[])
+}
+class subject.Wind {
++ void howl(Tree.Branch,Tree)
++ void touch(Human)
++ String toString()
+}
+class exception.HumanWithoutPlaceException {
+}
+enum humans.enums.Condition {
++  GOOD
++  UNSERTAIN
++  CONFIDENCE
+- double receptivity
++ double getReceptivity()
+}
+class humans.Author {
+- String comment
++ void comment(String)
+}
+class subject.lights.Fake_light {
++ void shine(Subjects,Tree,Tree.Branch)
+}
+class exception.LowSoundException {
+}
+interface humans.interfaces.CheckingParameters {
+}
+enum humans.enums.HeadPosition {
++  SRTAIGHT
++  DOWN
++  BACK
++  TO_SIDE
+- String position
++ String toString()
+}
+interface humans.interfaces.BrainProcesses {
+~ void thinking(String)
+~ void decides(String)
+~ void feel()
+}
+class subject.Subjects {
+~ String name
++ String toString()
+}
+enum humans.enums.Direction {
++  LEFT
++  RIGHT
++  UP
++  DOWN
+}
+enum world.Day_time {
++  MORNING
++  AFTERNOON
++  EVENING
++  NIGHT
+- String time
++ String toString()
+}
+interface humans.interfaces.Head {
++ void turnHead(HeadPosition)
+}
+enum world.Place {
++  TOP
++  FLASHLIGHT
++  CENTRE_OF_HEAP
++  BORDER
+- int coordinateX
+- int coordinateY
++ int getCoordinateX()
++ int getCoordinateY()
+}
+class exception.InvalidValueException {
+}
+class humans.Dgud {
++ void go(Direction)
++ void move()
++ void stand(Tree)
++ void see(Human,World)
++ String toString()
+}
+class subject.lights.Natural_light {
++ void shine(Tree.Branch)
+}
+class world.World {
++ ArrayList<Place> places
+- ArrayList<Human> humans
++ Day_time time
++ void putPeople(Human)
++ void deletePerson(Human)
++ void putPlaces(Place)
++ void setTime(Day_time)
++ Day_time getTime()
++ void newDayTime()
++ String toString()
+}
+class humans.Luis {
++ void move()
++ void sighed()
++ void fall()
++ void look()
++ void see(Human,World)
++ void stand(Tree)
+}
+
+
+subject.Tree +.. subject.Tree$Trunk
+subject.Tree <|-- subject.Tree$Trunk
+subject.Tree +.. subject.Tree$Branch
+subject.Tree <|-- subject.Tree$Branch
+humans.Head <|.. humans.Human
+humans.Walk <|.. humans.Human
+humans.Human +.. humans.Human$Medicine
+humans.Human +.. humans.Human$LeftArm
+humans.Human +.. humans.Human$RightArm
+subject.lights.Light +.. subject.lights.Light$Spot
+exception.RuntimeException <|-- exception.HumanWithoutPlaceException
+subject.lights.Light <|-- subject.lights.Fake_light
+exception.Exception <|-- exception.LowSoundException
+exception.Exception <|-- exception.InvalidValueException
+humans.Human <|-- humans.Dgud
+subject.lights.Light <|-- subject.lights.Natural_light
+humans.interfaces.BrainProcesses <|.. humans.Luis
+humans.Human <|-- humans.Luis
+@enduml

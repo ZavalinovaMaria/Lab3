@@ -36,8 +36,8 @@ public class Luis extends Human implements BrainProcesses  {
     }
 
     public void fall() {
-        if (health >= 0) {
-            double damage = -20 * getCondition().getReceptivity();
+        if (health > 0) {
+            double damage = 30 * getCondition().getReceptivity();
             setHealth(-damage);
             if (damage == 0) {
                 System.out.println(name + " не падал ни вперед ни назад");

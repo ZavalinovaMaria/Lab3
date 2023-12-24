@@ -165,7 +165,7 @@ public abstract class Human implements Head, Walk {
         else{
             if(getHealth() <= 20){
                 potion.recoverhealth();
-            } else if(getHealth()<70){
+            } else if(getHealth()<50){
                 pill.recoverhealth();
             }
             System.out.println("Здоровье :"+health);
@@ -180,7 +180,7 @@ public abstract class Human implements Head, Walk {
     Medicine potion = new Medicine() {
         @Override
         public void recoverhealth() {
-            setHealth(50);
+            setHealth(20);
         }
     };
 

@@ -125,8 +125,6 @@ class subject.lights.Fake_light {
 }
 class exception.LowSoundException {
 }
-interface humans.interfaces.CheckingParameters {
-}
 enum humans.enums.HeadPosition {
 +  SRTAIGHT
 +  DOWN

@@ -3,8 +3,9 @@ package subject;
 import humans.enums.Body;
 import humans.Human;
 import subject.*;
+import subject.interfaces.Touch;
 
-public class Wind {
+public class Wind  implements Touch {
     public Wind(){}
 
     public void howl(Tree.Branch branch, Tree tree){

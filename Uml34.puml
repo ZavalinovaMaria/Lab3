@@ -23,12 +23,12 @@ class subject.Tree$Branch {
 class subject.Noise {
 ~ double probability
 }
+interface humans.interfaces.Go {
+~ void go(Direction)
+}
 class subject.Brushwood {
 + void applyDamage(Human)
 + String toString()
-}
-interface humans.interfaces.Walk {
-~ void go(Direction)
 }
 abstract class humans.Human {
 + String name
@@ -99,6 +99,9 @@ class subject.lights.Light$Spot {
 + void newView(Human,Human)
 + String toString()
 }
+interface humans.interfaces.Look {
++ void look()
+}
 class Main {
 + {static} void main(String[])
 }
@@ -109,12 +112,18 @@ class subject.Wind {
 }
 class exception.HumanWithoutPlaceException {
 }
+interface subject.interfaces.Touch {
++ void touch(Human)
+}
 enum humans.enums.Condition {
 +  GOOD
 +  UNSERTAIN
 +  CONFIDENCE
 - double receptivity
 + double getReceptivity()
+}
+interface subject.interfaces.ApplyDamage {
++ void applyDamage(Human)
 }
 class humans.Author {
 - String comment
@@ -123,7 +132,13 @@ class humans.Author {
 class subject.lights.Fake_light {
 + void shine(Subjects,Tree,Tree.Branch)
 }
+interface humans.interfaces.Hear {
++ void hear(Tree)
+}
 class exception.LowSoundException {
+}
+interface humans.interfaces.GoAfter {
++ void goAfter(Human,Human)
 }
 enum humans.enums.HeadPosition {
 +  SRTAIGHT
@@ -133,9 +148,12 @@ enum humans.enums.HeadPosition {
 - String position
 + String toString()
 }
+interface humans.interfaces.Fall {
++ void fall()
+}
 interface humans.interfaces.BrainProcesses {
-~ void thinking(String)
-~ void decides(String)
+~ void think(String)
+~ void decide(String)
 ~ void feel()
 }
 class subject.Subjects {
@@ -156,8 +174,11 @@ enum world.Day_time {
 - String time
 + String toString()
 }
-interface humans.interfaces.Head {
+interface humans.interfaces.TurnHead {
 + void turnHead(HeadPosition)
+}
+interface subject.interfaces.MakeSound {
++ void makeSound()
 }
 enum world.Place {
 +  TOP
@@ -195,30 +216,41 @@ class world.World {
 }
 class humans.Luis {
 + void move()
-+ void sighed()
++ void sigh()
 + void fall()
 + void look()
 + void see(Human,World)
 + void stand(Tree)
 }
+interface humans.interfaces.Sigh {
++ void sigh()
+}
 
 
+subject.interfaces.MakeSound <|.. subject.Tree
 subject.Tree +.. subject.Tree$Trunk
 subject.Tree <|-- subject.Tree$Trunk
 subject.Tree +.. subject.Tree$Branch
 subject.Tree <|-- subject.Tree$Branch
-humans.Head <|.. humans.Human
-humans.Walk <|.. humans.Human
+subject.interfaces.ApplyDamage <|.. subject.Brushwood
+humans.TurnHead <|.. humans.Human
+humans.Go <|.. humans.Human
+humans.GoAfter <|.. humans.Human
+humans.Hear <|.. humans.Human
 humans.Human +.. humans.Human$Medicine
 humans.Human +.. humans.Human$LeftArm
 humans.Human +.. humans.Human$RightArm
 subject.lights.Light +.. subject.lights.Light$Spot
+subject.interfaces.Touch <|.. subject.Wind
 exception.RuntimeException <|-- exception.HumanWithoutPlaceException
 subject.lights.Light <|-- subject.lights.Fake_light
 exception.Exception <|-- exception.LowSoundException
 exception.Exception <|-- exception.InvalidValueException
 humans.Human <|-- humans.Dgud
 subject.lights.Light <|-- subject.lights.Natural_light
-humans.interfaces.BrainProcesses <|.. humans.Luis
+humans.BrainProcesses <|.. humans.Luis
+humans.Sigh <|.. humans.Luis
+humans.Fall <|.. humans.Luis
+humans.Look <|.. humans.Luis
 humans.Human <|-- humans.Luis
 @enduml

@@ -1,7 +1,9 @@
 package subject;
-import humans.*;
 
-public class Brushwood {
+import humans.*;
+import subject.interfaces.ApplyDamage;
+
+public class Brushwood implements ApplyDamage {
     public Brushwood(){}
     public  void applyDamage(Human human) {
         double i = -20*human.getCondition().getReceptivity();

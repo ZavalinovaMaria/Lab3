@@ -35,8 +35,8 @@ public class Main {
         l.takeToArm(arm1,bag);
         l.takeToArm(arm2,shovel);
 
-        l.thinking("Это сон, я так и не проснулся после дневного праздничного обеда");
-        l.decides("Ни за что больше не подойду к этому валежнику");
+        l.think("Это сон, я так и не проснулся после дневного праздничного обеда");
+        l.decide("Ни за что больше не подойду к этому валежнику");
         d.go(Direction.LEFT);
         l.go(Direction.LEFT);
 
@@ -86,7 +86,7 @@ public class Main {
         l.turnHead(HeadPosition.TO_SIDE);
         l.feel();
         wind.touch(l);
-        l.thinking("Холодный, чистый... всегда неизменный.");
+        l.think("Холодный, чистый... всегда неизменный.");
         l.setCondition(Condition.UNSERTAIN);
         l.go(Direction.DOWN);
         branch.makeSound();
@@ -97,7 +97,9 @@ public class Main {
        }
         l.move();
         l.fall();
-        l.sighed();
+        l.sigh();
+        System.out.println(l.equals(l));
+
 
     }
 }

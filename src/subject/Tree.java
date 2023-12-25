@@ -1,6 +1,8 @@
 package subject;
 
-public class Tree {
+import subject.interfaces.MakeSound;
+
+public class Tree implements MakeSound {
     String title;
     public double volume;
     public Tree(String title,double volume){

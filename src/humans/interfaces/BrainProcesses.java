@@ -1,10 +1,10 @@
 package humans.interfaces;
 
 public interface BrainProcesses {
-    default void  thinking(String thoughts){
+    default void  think(String thoughts){
         System.out.println("Подумал:' " +thoughts+"'");
     }
-    default void decides (String decision){
+    default void decide (String decision){
         System.out.println("Pешил:'"+decision+"'");
     }
     default void feel(){

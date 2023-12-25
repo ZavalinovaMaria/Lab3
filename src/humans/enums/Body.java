@@ -1,4 +1,5 @@
 package humans.enums;
+import humans.interfaces.BrainProcesses;
 
 public enum Body {
     LEGS("ноги"),
@@ -11,4 +12,6 @@ public enum Body {
     public String toString(){
         return bodypart;
     }
+
+
 }

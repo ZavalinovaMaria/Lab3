@@ -1,12 +1,12 @@
 package humans;
 import world.Day_time;
 import humans.enums.*;
-import humans.interfaces.BrainProcesses;
+import humans.interfaces.*;
 import subject.*;
 import world.*;
 
 
-public class Luis extends Human implements BrainProcesses  {
+public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
     public Luis(String name, int x, int y) {
         super(name,x,y);
     }
@@ -25,7 +25,7 @@ public class Luis extends Human implements BrainProcesses  {
         }
     }
 
-    public void sighed() {
+    public void sigh() {
         if (health >= 0) {
             if (getCondition() == Condition.UNSERTAIN) {
                 System.out.println(name + " вздохнул с облегчением");

@@ -9,7 +9,7 @@ import world.World;
 
 import java.util.ArrayList;
 import java.util.Objects;
-public abstract class Human implements Head, Walk {
+public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     public final String name;
     private int x;
     private int y;
@@ -92,7 +92,7 @@ public abstract class Human implements Head, Walk {
     public void go(Direction direction) {
         if(health >= 0){
         switch (direction) {
-            case LEFT -> {
+            case LEFT-> {
                 setx(getx() - 1);
                 sety(gety());
                 System.out.println(name + " идет налево от " + place);
@@ -153,7 +153,7 @@ public abstract class Human implements Head, Walk {
         else System.out.printf("%s слышит звук громкости %.2f",name,sound);}
     }
 
-    public void checkhealth(){
+    public void checkhealth() {
         try {
             takepill();
         } catch (InvalidValueException e){

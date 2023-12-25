@@ -185,67 +185,93 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     };
 
     public interface Medicine {
-        public void recoverhealth();
+         void recoverhealth();
     }
 
-   public class LeftArm{
+   public class LeftArm {
         public  ArrayList<Subjects> leftArms;
+       int weight=0;
         {leftArms=new ArrayList<>();}
-       public void  haveSubject(Subjects s){
-                leftArms.add(s);
-            }
 
-       @Override
-       public int hashCode(){
-            return Objects.hash(leftArms);
+       public void  haveSubject(Subjects s)  {
+            weight+=s.getWeight();
+           leftArms.add(s);
+
+           }
        }
-       }
+
+
     public class RightArm {
         public ArrayList<Subjects> rightArms;
-        {rightArms = new ArrayList<>();}
+
+        {
+            rightArms = new ArrayList<>();
+        }
+
         public void haveSubject(Subjects s) {
             rightArms.add(s);
         }
     }
-    public void takeToArm(Human.RightArm arm,Subjects...s){
-        for(Subjects subjects : s) {
-            arm.haveSubject(subjects);
-        }
-        System.out.println("В правой руке "+name+" теперь есть "+arm.rightArms);
-    }
-    public void takeToArm(Human.LeftArm arm,Subjects...s) {
-        if (health > 0) {
-            for (Subjects subjects : s) {
-                arm.haveSubject(subjects);
-            }
-            System.out.println("В левой руке " + name + "  теперь есть " + arm.leftArms);
-        }
-    }
-    public void replaceSubjects(Human.RightArm arm1,Human.LeftArm arm2) {
-        if (health > 0) {
-            ArrayList<Subjects> help = new ArrayList<>(arm1.rightArms);
-            arm1.rightArms = arm2.leftArms;
-            arm2.leftArms = help;
-            System.out.println(name + " преложил вещи из одной руки в другую");
-        }
-    }
-    @Override
-    public String toString(){
-        return name;
-    }
-    @Override
-    public int hashCode(){
-        return Objects.hash(name);
-    }
-    @Override
-    public boolean equals(Object obj){
-        if (this == obj) return true;
-        if (obj == null ) return false;
 
-        Human human = (Human) obj;
-        return place==human.place;
+
+        public void takeToArm(Human.RightArm arm, Subjects... s) throws InvalidValueException {
+            int weight = 0;
+            for (Subjects subjects : s) {
+                weight += subjects.getWeight();
+                if (weight >= 20) throw new InvalidValueException(String.format("Человек столько не унесет"));
+                else {
+                    arm.haveSubject(subjects);
+                }
+
+                System.out.println("В правой руке " + name + " теперь есть " + arm.rightArms);
+            }
+        }
+
+
+         public void takeToArm(Human.LeftArm arm, Subjects... s) throws InvalidValueException {
+            int weight = 0;
+            for (Subjects subjects : s) {
+                weight += subjects.getWeight();
+                if (weight >= 30) throw new InvalidValueException(String.format("Человек столько не унесет"));
+                else {
+                    arm.haveSubject(subjects);
+                }
+
+                System.out.println("В левой руке " + name + "  теперь есть " + arm.leftArms);
+            }
+
+        }
+
+
+        public void replaceSubjects(Human.RightArm arm1, Human.LeftArm arm2) {
+            if (health > 0) {
+                ArrayList<Subjects> help = new ArrayList<>(arm1.rightArms);
+                arm1.rightArms = arm2.leftArms;
+                arm2.leftArms = help;
+                System.out.println(name + " преложил вещи из одной руки в другую");
+            }
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+
+            Human human = (Human) obj;
+            return place == human.place;
+        }
     }
-}
+
 
 
 

@@ -1,6 +1,7 @@
 import exception.*;
 import humans.*;
 import humans.enums.*;
+import humans.Human;
 import subject.*;
 import subject.lights.*;
 import world.*;
@@ -26,14 +27,24 @@ public class Main {
         world.putPlaces(Place.BORDER,Place.TOP,Place.CENTRE_OF_HEAP,Place.FLASHLIGHT);
         world.putPeople(l,d);
 
-        Subjects bag = new Subjects("пакет ");
-        Subjects shovel = new Subjects("лопата ");
-        Subjects bones= new Subjects("костей ");
+        Subjects bag = new Subjects("пакет ",4);
+        Subjects shovel = new Subjects("лопата ",18);
+        Subjects bones= new Subjects("костей ",21);
+        Subjects ball = new Subjects("мяч ",16);
 
         Luis.RightArm arm1 =  l. new RightArm();
         Luis.LeftArm arm2 =  l. new LeftArm();
-        l.takeToArm(arm1,bag);
-        l.takeToArm(arm2,shovel);
+        try{
+            l.takeToArm(arm1,bag,ball);
+        }catch (InvalidValueException e){
+            System.out.println(e.getMessage());
+        }
+        try{
+            l.takeToArm(arm2,shovel,bones);
+        } catch (InvalidValueException e){
+            System.out.println(e.getMessage());
+        }
+
 
         l.think("Это сон, я так и не проснулся после дневного праздничного обеда");
         l.decide("Ни за что больше не подойду к этому валежнику");

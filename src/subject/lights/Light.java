@@ -55,10 +55,10 @@ public abstract class Light {
             if (h.equals(h1) && h.getPlace() == Place.FLASHLIGHT) {
                 setBrightness(getBrightness() + 10);
                 setSize(getSize() - 2);
-                System.out.println(toString() + "стало меньше(" + size + ") и  еще ярче(" + brightness + ")");
+                System.out.println(this + "стало меньше(" + size + ") и  еще ярче(" + brightness + ")");
             } else {
-                System.out.println(toString() + " осталось неизменным");
-                //;h.equals(h1) &&
+                System.out.println(this + " осталось неизменным");
+
             }
 
         }

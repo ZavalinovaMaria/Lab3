@@ -52,7 +52,7 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
 
     public void look() {
         if (health >= 0) {
-            if (getHeadPosition() == HeadPosition.SRTAIGHT) {
+            if (getHeadPosition() == HeadPosition.STRAIGHT) {
                 System.out.println(name + " не смотрел " + HeadPosition.DOWN + " или " + HeadPosition.TO_SIDE);
             }
             if (getHeadPosition() == HeadPosition.DOWN && getPlace() == Place.TOP) {

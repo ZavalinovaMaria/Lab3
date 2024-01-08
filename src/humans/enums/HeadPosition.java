@@ -1,7 +1,7 @@
 package humans.enums;
 
 public enum HeadPosition {
-    SRTAIGHT("прямо"),
+    STRAIGHT("прямо"),
     DOWN("вниз"),
     BACK("назад"),
     TO_SIDE("по сторонам ");

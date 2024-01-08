@@ -4,7 +4,6 @@ import humans.enums.*;
 import subject.*;
 import world.*;
 
-
 public class Dgud extends Human {
     public Dgud(String name, int x, int y) {
         super(name, x, y);
@@ -26,7 +25,7 @@ public class Dgud extends Human {
                 case UP -> {
                     setx(getx());
                     sety(gety() + 1);
-                    if (getCondition() == Condition.CONFIDENCE && getHeadPosition() == HeadPosition.SRTAIGHT) {
+                    if (getCondition() == Condition.CONFIDENCE && getHeadPosition() == HeadPosition.STRAIGHT) {
                         System.out.println("Без промедления,даже не осмотревшись " + name + " полез вверх");
                     } else {
                         System.out.println("поднимается ");
@@ -63,10 +62,6 @@ public class Dgud extends Human {
                 System.out.println(name + " видит " + human);
             }
         }
-    }
-    @Override
-    public String toString(){
-        return name;
     }
 
 }

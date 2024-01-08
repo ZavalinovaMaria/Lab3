@@ -51,10 +51,7 @@ public class Main {
         d.go(Direction.LEFT);
         l.go(Direction.LEFT);
 
-
         flashlight.shine(bones,trees,branch);
-
-
         spot.newView(l,d);
 
         d.go(Direction.RIGHT);
@@ -109,8 +106,6 @@ public class Main {
         l.move();
         l.fall();
         l.sigh();
-        System.out.println(l.equals(l));
-
-
+        
     }
 }

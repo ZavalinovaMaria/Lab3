@@ -9,7 +9,7 @@ public class Tree implements MakeSound {
         this.title = title;
         this.volume = volume;
     }
-    public class Trunk extends Tree {
+    public  class Trunk extends Tree {
         public Trunk(String title,double volume){
             super(title,volume);
         }
@@ -30,13 +30,10 @@ public class Tree implements MakeSound {
         public String anotherForm(){
             return "ветвях";
         }
-        public String anotherForm2(){
-            return "ветка";
-        }
     }
     public void makeSound(){
          class Noise{
-            double probability;
+             final double probability;
             Noise(){
                 probability= Math.random();
             }
@@ -44,9 +41,8 @@ public class Tree implements MakeSound {
         Noise silence = new Noise();
         volume= volume*(1- silence.probability);
     }
-    public String hasTitle(){
-        return title;
-    }
+
+
     @Override
     public String toString() {
         return "деревьев";

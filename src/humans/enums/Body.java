@@ -1,10 +1,9 @@
 package humans.enums;
-import humans.interfaces.BrainProcesses;
 
 public enum Body {
     LEGS("ноги"),
     HAIR("волосы");
-    private String bodypart;
+    private  final String bodypart;
     Body(String bodypart){
         this.bodypart = bodypart;
     }

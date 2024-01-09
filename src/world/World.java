@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import humans.*;
 
 public class World {
+    public static int sizeOfHumans=0;
     public  final ArrayList<Place> places;
     {places = new ArrayList<>();}
     private final ArrayList<Human> humans;
@@ -11,19 +12,19 @@ public class World {
     public Day_time time;
     public World(Day_time time){
         this.time = time;
-        System.out.println(toString()+"Тукущее ремя суток "+ time.toString());
+        System.out.println(this+"Тукущее ремя суток "+ time.toString());
 
     }
 
     public void putPeople(Human... h) {
         for (Human human : h) {
             humans.add(human);
+            sizeOfHumans++;
             human.checkplace();
         }
+
     }
-    public void deletePerson(Human human){
-        humans.remove(human);
-    }
+
     public void putPlaces(Place... p) {
         for (Place place : p) {
             places.add(place);

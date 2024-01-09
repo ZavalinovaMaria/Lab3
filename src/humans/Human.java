@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     public final String name;
+
     private int x;
     private int y;
     protected int health;
@@ -52,7 +53,7 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     }
 
     public void setHealth(double i) {
-        health +=i;
+        health +=  i;
     }
 
     public int getx() {
@@ -80,7 +81,7 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     }
 
     public void turnHead(HeadPosition position) {
-        if (health > 0) {
+        if (health > 0 && getCondition()!=Condition.SLEEP) {
             switch (position) {
                 case BACK -> {
                     setHeadPosition(HeadPosition.BACK);
@@ -103,7 +104,7 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     }
 
     public void go(Direction direction) {
-        if (health >= 0) {
+        if (health >= 0 && getCondition()!=Condition.SLEEP) {
             switch (direction) {
                 case LEFT -> {
                     setx(getx() - 1);
@@ -146,6 +147,22 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
             throw new HumanWithoutPlaceException(String.format("%s находится в неизвестном месте ", name), null);
     }
 
+    public void wantToGo(Place place) {
+        if (health >= 0 && getCondition() != Condition.SLEEP) {
+            switch (place) {
+                case TOP -> {
+                    setCondition(Condition.CONFIDENCE);
+                }
+                case CENTRE_OF_HEAP -> {
+                    setCondition(Condition.UNSERTAIN);
+                }
+                case FLASHLIGHT -> {
+                    setCondition(Condition.GOOD);
+                }
+            }
+        }
+    }
+
     public abstract void move();
 
     public abstract void stand(Tree tree);
@@ -153,7 +170,7 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     public abstract void see(Human human, World world);
 
     public void goAfter(Human p, Human h) {
-        if (p.health >= 0) {
+        if (p.health >= 0 && p.getCondition() != Condition.SLEEP) {
             if (!p.equals(h) && p.hashCode() != h.hashCode()) {
                 p.setx(h.getx());
                 p.sety(h.gety());
@@ -203,60 +220,98 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
     public  class LeftArm {
         public ArrayList<Subjects> leftArms;
         int weight = 0;
+        static int count = 0;
+
         {
-            leftArms = new ArrayList<>();
+            try {
+                checkCoutL();
+            } catch (InvalidValueException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void checkCoutL() throws InvalidValueException {
+            if (count >= world.World.sizeOfHumans)
+                throw new InvalidValueException(String.format("У %s уже есть подобная  рука", name));
+            else {
+                leftArms = new ArrayList<>();
+                count++;
+            }
         }
 
         public void haveSubject(Subjects s) {
-            weight += s.getWeight();
-            leftArms.add(s);
+                weight += s.getWeight();
+                leftArms.add(s);
 
         }
     }
+
 
 
     public class RightArm {
         public ArrayList<Subjects> rightArms;
+        static int count = 0;
+
         {
-            rightArms = new ArrayList<>();
+            try {
+                checkCoutR();
+            } catch (InvalidValueException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void checkCoutR() throws InvalidValueException {
+            if (count >= world.World.sizeOfHumans)
+                throw new InvalidValueException(String.format("У %s уже есть подобная  рука", name));
+            else {
+                rightArms = new ArrayList<>();
+                count++;
+            }
         }
 
         public void haveSubject(Subjects s) {
+
             rightArms.add(s);
         }
     }
 
-    public void takeToArm(Human.RightArm arm, Subjects... s) throws InvalidValueException {
-        int weight = 0;
-        for (Subjects subjects : s) {
-            weight += subjects.getWeight();
-            if (weight >= 20) throw new InvalidValueException(String.format("%s столько не унесет", name));
-            else {
-                arm.haveSubject(subjects);
+
+        public void takeToArm(Human.RightArm arm, Subjects... s) throws InvalidValueException {
+            if (health >= 0 && getCondition() != Condition.SLEEP) {
+                int weight = 0;
+                for (Subjects subjects : s) {
+                    weight += subjects.getWeight();
+                    if (weight >= 20) throw new InvalidValueException(String.format("%s столько не унесет", name));
+                    else {
+                        arm.haveSubject(subjects);
+                    }
+
+                    System.out.println("В правой руке " + name + " теперь есть " + arm.rightArms);
+                }
             }
-
-            System.out.println("В правой руке " + name + " теперь есть " + arm.rightArms);
-        }
-    }
-
-
-    public void takeToArm(Human.LeftArm arm, Subjects... s) throws InvalidValueException {
-        int weight = 0;
-        for (Subjects subjects : s) {
-            weight += subjects.getWeight();
-            if (weight >= 30) throw new InvalidValueException(String.format("%s столько не унесет", name));
-            else {
-                arm.haveSubject(subjects);
-            }
-
-            System.out.println("В левой руке " + name + "  теперь есть " + arm.leftArms);
         }
 
-    }
+
+
+        public void takeToArm(Human.LeftArm arm, Subjects... s) throws InvalidValueException {
+            if (health >= 0 && getCondition() != Condition.SLEEP) {
+                int weight = 0;
+                for (Subjects subjects : s) {
+                    weight += subjects.getWeight();
+                    if (weight >= 30) throw new InvalidValueException(String.format("%s столько не унесет", name));
+                    else {
+                        arm.haveSubject(subjects);
+                    }
+
+                    System.out.println("В левой руке " + name + "  теперь есть " + arm.leftArms);
+                }
+            }
+        }
+
 
 
     public void replaceSubjects(Human.RightArm arm1, Human.LeftArm arm2) {
-        if (health > 0) {
+        if (health > 0 && getCondition() != Condition.SLEEP) {
             ArrayList<Subjects> help = new ArrayList<>(arm1.rightArms);
             arm1.rightArms = arm2.leftArms;
             arm2.leftArms = help;
@@ -271,7 +326,7 @@ public abstract class Human implements TurnHead, Go,GoAfter,Hear {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(place);
     }
 
     @Override

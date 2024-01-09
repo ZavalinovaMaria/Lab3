@@ -10,9 +10,9 @@ import world.*;
 public class Main {
     public static void main(String[] args) {
         World world = new World(Day_time.NIGHT);
-        Luis l = new Luis("Luis",0,0);
+        Luis l = new Luis(0,0);
 
-        Dgud d = new Dgud("Dgud",0,0);
+        Dgud d = new Dgud(0,0);
         Fake_light flashlight = new Fake_light("Луч фонаря ");
         Natural_light ray =new Natural_light("Cвет");
         Light.Spot spot = new Light.Spot(30,100);
@@ -21,11 +21,11 @@ public class Main {
         Tree trees = new Tree("деревья",30);
         Tree.Trunk trunk = trees.new Trunk("ствол",10);
         Tree.Branch branch = trees.new Branch("ветка",5);
-        Author author = new Author();
         Wind wind = new Wind();
 
         world.putPlaces(Place.BORDER,Place.TOP,Place.CENTRE_OF_HEAP,Place.FLASHLIGHT);
         world.putPeople(l,d);
+
 
         Subjects bag = new Subjects("пакет ",4);
         Subjects shovel = new Subjects("лопата ",18);
@@ -45,24 +45,22 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
-
-        l.think("Это сон, я так и не проснулся после дневного праздничного обеда");
-        l.decide("Ни за что больше не подойду к этому валежнику");
+        l.think("я сплю");
+        l.think("я смогу сделать это");
         d.go(Direction.LEFT);
         l.go(Direction.LEFT);
 
         flashlight.shine(bones,trees,branch);
         spot.newView(l,d);
-
         d.go(Direction.RIGHT);
-        d.setCondition(Condition.CONFIDENCE);
+
+        d.wantToGo(Place.TOP);
         d.go(Direction.UP);
         d.move();
         l.goAfter(l,d);
         l.look();
-        l.setCondition(Condition.CONFIDENCE);
+        l.wantToGo(Place.TOP);
         l.move();
-        author.comment("Это, конечно, было так же глупо, как верить в охранительную силу медальона или крестика. Но это действовало.");
         brushwood.applyDamage(l);
         trunk.makeSound();
         try{
@@ -83,19 +81,16 @@ public class Main {
         l.see(d,world);
         d.go(Direction.DOWN);
         ray.shine(branch);
-        author.comment("Да, это была именно граница — зачем это скрывать?");
         l.checkplace();
         l.stand(trunk);
         l.turnHead(HeadPosition.DOWN);
         l.look();
         l.replaceSubjects(arm1,arm2);
 
-
         l.turnHead(HeadPosition.TO_SIDE);
         l.feel();
         wind.touch(l);
-        l.think("Холодный, чистый... всегда неизменный.");
-        l.setCondition(Condition.UNSERTAIN);
+        l.wantToGo(Place.CENTRE_OF_HEAP);
         l.go(Direction.DOWN);
         branch.makeSound();
        try{
@@ -106,6 +101,6 @@ public class Main {
         l.move();
         l.fall();
         l.sigh();
-        
+
     }
 }

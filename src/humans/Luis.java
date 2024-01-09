@@ -7,12 +7,12 @@ import world.*;
 
 
 public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
-    public Luis(String name, int x, int y) {
-        super(name,x,y);
+    public Luis( int x, int y) {
+        super("Luis",x,y);
     }
     @Override
     public  void  move() {
-        if (health >= 0) {
+        if (health >= 0 && getCondition() != Condition.SLEEP) {
             if (getCondition() == Condition.CONFIDENCE) {
                 System.out.println(name + " двигался со странной уверенностью, что пока он идет он в безопасности");
             }
@@ -26,7 +26,7 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
     }
 
     public void sigh() {
-        if (health >= 0) {
+        if (health >= 0 ) {
             if (getCondition() == Condition.UNSERTAIN) {
                 System.out.println(name + " вздохнул с облегчением");
             } else {
@@ -36,7 +36,7 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
     }
 
     public void fall() {
-        if (health > 0) {
+        if (health > 0 ) {
             double damage = 30 * getCondition().getReceptivity();
             setHealth(-damage);
             if (damage == 0) {
@@ -51,7 +51,7 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
     }
 
     public void look() {
-        if (health >= 0) {
+        if (health >= 0 && getCondition() != Condition.SLEEP) {
             if (getHeadPosition() == HeadPosition.STRAIGHT) {
                 System.out.println(name + " не смотрел " + HeadPosition.DOWN + " или " + HeadPosition.TO_SIDE);
             }
@@ -63,7 +63,7 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
 
     @Override
     public void see(Human human,World world) {
-        if(health >=0){
+        if(health >=0 && getCondition() != Condition.SLEEP){
             if(world.getTime() == Day_time.EVENING || world.getTime() ==Day_time.NIGHT){
         System.out.println(name + " сквозь темноту видит " +"стоящего "+human+" на "+ getPlace());}
         else {
@@ -71,8 +71,22 @@ public class Luis extends Human implements BrainProcesses, Sigh, Fall,Look{
 
     @Override
     public void stand(Tree tree) {
-        if (health >= 0) {
+        if (health >= 0 && getCondition() != Condition.SLEEP) {
             System.out.println(name + " остановился на миг, расставвив " + Body.LEGS + " на ненадежных скользких " + tree);
         }
     }
+    @Override
+    public void think(String thoughts) {
+        if (health >= 0) {
+            switch (thoughts) {
+                case " " -> {
+                    setCondition(Condition.SLEEP);
+                }
+                case "я сплю" -> {
+                    setCondition(Condition.GOOD);
+                }
+            }
+        }
+    }
 }
+

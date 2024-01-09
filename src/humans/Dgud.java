@@ -5,13 +5,13 @@ import subject.*;
 import world.*;
 
 public class Dgud extends Human {
-    public Dgud(String name, int x, int y) {
-        super(name, x, y);
+    public Dgud( int x, int y) {
+        super("Dgud", x, y);
     }
 
     @Override
     public void go(Direction direction) {
-        if (health >= 0) {
+        if (health >= 0 && getCondition()!=Condition.SLEEP) {
             switch (direction) {
                 case LEFT -> {
                     setx(getx() - 1);
@@ -43,7 +43,7 @@ public class Dgud extends Human {
 
     @Override
     public void move() {
-        if (health >= 0) {
+        if (health >= 0 && getCondition() != Condition.SLEEP) {
             if (getCondition() == Condition.CONFIDENCE) {
                 System.out.println("Он шел, как человек, хорошо знающий, куда ведет путь.");
             }
@@ -51,11 +51,11 @@ public class Dgud extends Human {
     }
     @Override
     public void stand(Tree tree) {
-        if (health >= 0) {
+        if (health >= 0 && getCondition()!=Condition.SLEEP) {
             System.out.println(name + " стоит на " + getPlace());}}
     @Override
     public void see(Human human, World world) {
-        if (health >= 0) {
+        if (health >= 0 && getCondition()!=Condition.SLEEP) {
             if (world.getTime() == Day_time.EVENING || world.getTime() == Day_time.NIGHT) {
                 System.out.println(name + " почти ничего не  видит ");
             } else {

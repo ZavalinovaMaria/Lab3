@@ -5,7 +5,7 @@ public enum Day_time {
     AFTERNOON("день"),
     EVENING("вечер"),
     NIGHT("ночь");
-    private String time;
+    private final String time;
     Day_time(String time){
         this.time = time;
     }

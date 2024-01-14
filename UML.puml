@@ -1,15 +1,30 @@
 @startuml
 enum humans.enums.Body {
 +  LEGS
++  CHEST
 +  HAIR
 - String bodypart
+- String defaultPosition
+- String anotherPosition
 + String toString()
++ void setAnotherPosition(String)
++ String getDefaultPosition()
++ String getAnotherPosition()
+}
+interface humans.interfaces.CheckBrain {
+~ void checkBrainSignals()
+}
+interface humans.interfaces.BrainActions {
+~ void think(String)
+~ void feel(boolean)
 }
 class subject.Tree {
 ~ String title
 + double volume
++ int perscentOfIllumination
 + void makeSound()
-+ String hasTitle()
++ int getPerscentOfIllumination()
++ void setPerscentOfIllumination(int)
 + String toString()
 }
 class subject.Tree$Trunk {
@@ -18,13 +33,16 @@ class subject.Tree$Trunk {
 class subject.Tree$Branch {
 + String toString()
 + String anotherForm()
-+ String anotherForm2()
 }
 class subject.Noise {
 ~ double probability
 }
+class subject.lights.NaturalLight {
++ void shine(Tree.Branch)
+}
 interface humans.interfaces.Go {
 ~ void go(Direction)
+~ void walk(Way,Place)
 }
 class subject.Brushwood {
 + void applyDamage(Human)
@@ -38,6 +56,8 @@ abstract class humans.Human {
 # Condition condition
 # Place place
 # HeadPosition position
+# boolean knowledge
++ ArrayList<Integer> brainSignals
 ~ Medicine pill
 ~ Medicine potion
 + String getName()
@@ -47,23 +67,28 @@ abstract class humans.Human {
 + void setPlace(Place)
 + int getHealth()
 + void setHealth(double)
-+ int getx()
-+ int gety()
-+ void setx(int)
-+ void sety(int)
++ int getX()
++ int getY()
++ void setX(int)
++ void setY(int)
++ boolean getKnowledge()
++ void setKnowledge(boolean)
 + HeadPosition getHeadPosition()
 + void setHeadPosition(HeadPosition)
 + void turnHead(HeadPosition)
 + void go(Direction)
-+ void checkplace()
-+ void chekUnknownPlace()
-+ {abstract}void move()
++ void checkPlace()
++ void checkUnknownPlace()
++ {abstract}void walk(Way,Place)
 + {abstract}void stand(Tree)
-+ {abstract}void see(Human,World)
-+ void goAfter(Human,Human)
-+ void hear(Tree)
-+ void checkhealth()
-+ void takepill()
++ void wakeUp()
++ void know(Way,Place)
++ void feel(boolean)
++ void hearSound(Tree)
++ void hear(Tree,Human)
++ void checkHealth()
++ void takePill()
++ void checkBrainSignals()
 + void takeToArm(Human.RightArm,Subjects)
 + void takeToArm(Human.LeftArm,Subjects)
 + void replaceSubjects(Human.RightArm,Human.LeftArm)
@@ -72,76 +97,86 @@ abstract class humans.Human {
 + boolean equals(Object)
 }
 interface humans.Human$Medicine {
-+ void recoverhealth()
+~ void recoverHealth()
 }
 class humans.Human$LeftArm {
 + ArrayList<Subjects> leftArms
+~ {static} int count
++ void checkCountL()
 + void haveSubject(Subjects)
-+ int hashCode()
 }
 class humans.Human$RightArm {
 + ArrayList<Subjects> rightArms
+~ {static} int count
++ void checkCountR()
 + void haveSubject(Subjects)
 }
 abstract class subject.lights.Light {
 # int brightness
 ~ String name
-# int T
+# int period
+# int time
++ void shineToTree(Tree)
++ void shineToSubject(Subjects)
 + String lightCharacteristic()
 }
 class subject.lights.Light$Spot {
-- int size
-- int brightness
-+ int getSize()
-+ int getBrightness()
-+ void setSize(int)
-+ void setBrightness(int)
+- double size
+- double brightness
++ double getSize()
++ double getBrightness()
++ void setSize(double)
++ void setBrightness(double)
 + void newView(Human,Human)
 + String toString()
 }
 interface humans.interfaces.Look {
-+ void look()
+~ void look()
 }
 class Main {
 + {static} void main(String[])
 }
 class subject.Wind {
+~ double volume
+~ double power
 + void howl(Tree.Branch,Tree)
-+ void touch(Human)
++ boolean touch(Human)
 + String toString()
 }
 class exception.HumanWithoutPlaceException {
 }
 interface subject.interfaces.Touch {
-+ void touch(Human)
+~ boolean touch(Human)
+}
+class world.Way {
++ ArrayList<Direction> wayFromCentreToTop
++ ArrayList<Direction> wayFromTopToPlain
 }
 enum humans.enums.Condition {
 +  GOOD
 +  UNSERTAIN
 +  CONFIDENCE
++  SLEEP
 - double receptivity
 + double getReceptivity()
 }
 interface subject.interfaces.ApplyDamage {
-+ void applyDamage(Human)
+~ void applyDamage(Human)
 }
-class humans.Author {
-- String comment
-+ void comment(String)
-}
-class subject.lights.Fake_light {
+class subject.lights.FakeLight {
 + void shine(Subjects,Tree,Tree.Branch)
 }
 interface humans.interfaces.Hear {
-+ void hear(Tree)
+~ void hear(Tree,Human)
 }
 class exception.LowSoundException {
++ {static} int count
 }
 interface humans.interfaces.GoAfter {
-+ void goAfter(Human,Human)
+~ void goAfter(Way,Human,Human)
 }
 enum humans.enums.HeadPosition {
-+  SRTAIGHT
++  STRAIGHT
 +  DOWN
 +  BACK
 +  TO_SIDE
@@ -149,15 +184,21 @@ enum humans.enums.HeadPosition {
 + String toString()
 }
 interface humans.interfaces.Fall {
-+ void fall()
+~ void fall()
 }
-interface humans.interfaces.BrainProcesses {
-~ void think(String)
-~ void decide(String)
-~ void feel()
+interface humans.interfaces.CheckHealth {
+~ void checkHealth()
+}
+interface humans.interfaces.CheckLocation {
+~ void checkPlace()
 }
 class subject.Subjects {
 ~ String name
+~ int weight
++ int perscentOfIllumination
++ int getWeight()
++ int getPerscentOfIllumination()
++ void setPerscentOfIllumination(int)
 + String toString()
 }
 enum humans.enums.Direction {
@@ -175,15 +216,23 @@ enum world.Day_time {
 + String toString()
 }
 interface humans.interfaces.TurnHead {
-+ void turnHead(HeadPosition)
+~ void turnHead(HeadPosition)
+}
+interface humans.interfaces.Know {
+~ {abstract}void know(Way,Place)
 }
 interface subject.interfaces.MakeSound {
-+ void makeSound()
+~ void makeSound()
 }
 enum world.Place {
 +  TOP
 +  FLASHLIGHT
++  LEFT_SLOPE
++  MIDDLE_SLOPE
++  RIGHT_SLOPE
 +  CENTRE_OF_HEAP
++  PLAIN_1
++  PLAIN_2
 +  BORDER
 - int coordinateX
 - int coordinateY
@@ -193,37 +242,35 @@ enum world.Place {
 class exception.InvalidValueException {
 }
 class humans.Dgud {
-+ void go(Direction)
-+ void move()
 + void stand(Tree)
-+ void see(Human,World)
-+ String toString()
-}
-class subject.lights.Natural_light {
-+ void shine(Tree.Branch)
++ void see(World,Light.Spot,Human,Human)
++ void walk(Way,Place)
++ void fall()
 }
 class world.World {
++ {static} int sizeOfHumans
 + ArrayList<Place> places
 - ArrayList<Human> humans
 + Day_time time
 + void putPeople(Human)
-+ void deletePerson(Human)
 + void putPlaces(Place)
 + void setTime(Day_time)
 + Day_time getTime()
-+ void newDayTime()
++ void newDayTime(Human)
 + String toString()
 }
 class humans.Luis {
-+ void move()
++ void goAfter(Way,Human,Human)
 + void sigh()
++ void walk(Way,Place)
 + void fall()
 + void look()
 + void see(Human,World)
 + void stand(Tree)
++ void think(String)
 }
 interface humans.interfaces.Sigh {
-+ void sigh()
+~ void sigh()
 }
 
 
@@ -232,25 +279,30 @@ subject.Tree +.. subject.Tree$Trunk
 subject.Tree <|-- subject.Tree$Trunk
 subject.Tree +.. subject.Tree$Branch
 subject.Tree <|-- subject.Tree$Branch
+subject.lights.Light <|-- subject.lights.NaturalLight
 subject.interfaces.ApplyDamage <|.. subject.Brushwood
 humans.TurnHead <|.. humans.Human
 humans.Go <|.. humans.Human
-humans.GoAfter <|.. humans.Human
 humans.Hear <|.. humans.Human
+humans.BrainActions <|.. humans.Human
+humans.Know <|.. humans.Human
+humans.CheckBrain <|.. humans.Human
+humans.CheckLocation <|.. humans.Human
+humans.CheckHealth <|.. humans.Human
 humans.Human +.. humans.Human$Medicine
 humans.Human +.. humans.Human$LeftArm
 humans.Human +.. humans.Human$RightArm
 subject.lights.Light +.. subject.lights.Light$Spot
-subject.interfaces.Touch <|.. subject.Wind
+subject.Touch <|.. subject.Wind
 exception.RuntimeException <|-- exception.HumanWithoutPlaceException
-subject.lights.Light <|-- subject.lights.Fake_light
+subject.lights.Light <|-- subject.lights.FakeLight
 exception.Exception <|-- exception.LowSoundException
 exception.Exception <|-- exception.InvalidValueException
+humans.interfaces.Fall <|.. humans.Dgud
 humans.Human <|-- humans.Dgud
-subject.lights.Light <|-- subject.lights.Natural_light
-humans.BrainProcesses <|.. humans.Luis
 humans.Sigh <|.. humans.Luis
 humans.Fall <|.. humans.Luis
 humans.Look <|.. humans.Luis
+humans.GoAfter <|.. humans.Luis
 humans.Human <|-- humans.Luis
 @enduml

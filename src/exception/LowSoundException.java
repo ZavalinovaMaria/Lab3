@@ -1,7 +1,11 @@
 package exception;
 
 public class LowSoundException extends Exception {
-    public LowSoundException(String message){
+    public static int count;
+
+    public LowSoundException(String message) {
         super(message);
+        count++;
     }
+
 }

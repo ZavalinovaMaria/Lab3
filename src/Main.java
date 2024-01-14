@@ -1,7 +1,6 @@
 import exception.*;
 import humans.*;
 import humans.enums.*;
-import humans.Human;
 import subject.*;
 import subject.lights.*;
 import world.*;
@@ -10,11 +9,11 @@ import world.*;
 public class Main {
     public static void main(String[] args) {
         World world = new World(Day_time.NIGHT);
-        Luis l = new Luis(0,0);
+        Luis luis = new Luis(0,0);
 
-        Dgud d = new Dgud(0,0);
-        Fake_light flashlight = new Fake_light("Луч фонаря ");
-        Natural_light ray =new Natural_light("Cвет");
+        Dgud dgud = new Dgud(0,0);
+        FakeLight flashlight = new FakeLight("Луч фонаря ",6);
+        NaturalLight ray =new NaturalLight("Cвет",5);
         Light.Spot spot = new Light.Spot(30,100);
 
         Brushwood brushwood = new Brushwood();
@@ -24,83 +23,69 @@ public class Main {
         Wind wind = new Wind();
 
         world.putPlaces(Place.BORDER,Place.TOP,Place.CENTRE_OF_HEAP,Place.FLASHLIGHT);
-        world.putPeople(l,d);
+        world.putPeople(luis,dgud);
 
+        Way way = new Way();
 
         Subjects bag = new Subjects("пакет ",4);
         Subjects shovel = new Subjects("лопата ",18);
         Subjects bones= new Subjects("костей ",21);
         Subjects ball = new Subjects("мяч ",16);
 
-        Luis.RightArm arm1 =  l. new RightArm();
-        Luis.LeftArm arm2 =  l. new LeftArm();
+        Luis.RightArm arm1 =  luis. new RightArm();
+        Luis.LeftArm arm2 =  luis. new LeftArm();
         try{
-            l.takeToArm(arm1,bag,ball);
+            luis.takeToArm(arm1,bag,ball);
         }catch (InvalidValueException e){
             System.out.println(e.getMessage());
         }
         try{
-            l.takeToArm(arm2,shovel,bones);
+            luis.takeToArm(arm2,shovel,bones);
         } catch (InvalidValueException e){
             System.out.println(e.getMessage());
         }
 
-        l.think("я сплю");
-        l.think("я смогу сделать это");
-        d.go(Direction.LEFT);
-        l.go(Direction.LEFT);
+        luis.think("я сплю?");
+        luis.think("если я проснусь, больше не пойду к валежнику");
+        luis.think("у меня получится забраться");
 
+        dgud.go(Direction.LEFT);
+        luis.go(Direction.LEFT);
         flashlight.shine(bones,trees,branch);
-        spot.newView(l,d);
-        d.go(Direction.RIGHT);
+        dgud.see(world,spot,dgud,luis);
 
-        d.wantToGo(Place.TOP);
-        d.go(Direction.UP);
-        d.move();
-        l.goAfter(l,d);
-        l.look();
-        l.wantToGo(Place.TOP);
-        l.move();
-        brushwood.applyDamage(l);
+        dgud.know(way,Place.TOP);
+        dgud.walk(way,Place.TOP);
+        luis.goAfter(way,luis,dgud);
+        luis.look();
+        brushwood.applyDamage(luis);
         trunk.makeSound();
-        try{
-            l.hear(trunk);}
-        catch (LowSoundException e){
-            System.out.println(e.getMessage());
-        }
+        luis.hear(trunk,luis);
         branch.makeSound();
-        try{
-            l.hear(branch);}
-        catch (LowSoundException e){
-            System.out.println(e.getMessage());
-        }
-        l.fall();
+        luis.hear(branch,luis);
+        luis.fall();
+
         wind.howl(branch,trees);
+        dgud.stand(trunk);
+        luis.see(dgud,world);
+        dgud.know(way,Place.PLAIN_1);
+        dgud.walk(way,Place.PLAIN_1);
 
-        d.stand(trunk);
-        l.see(d,world);
-        d.go(Direction.DOWN);
         ray.shine(branch);
-        l.checkplace();
-        l.stand(trunk);
-        l.turnHead(HeadPosition.DOWN);
-        l.look();
-        l.replaceSubjects(arm1,arm2);
+        luis.stand(trunk);
+        luis.turnHead(HeadPosition.DOWN);
+        luis.look();
+        luis.replaceSubjects(arm1,arm2);
 
-        l.turnHead(HeadPosition.TO_SIDE);
-        l.feel();
-        wind.touch(l);
-        l.wantToGo(Place.CENTRE_OF_HEAP);
-        l.go(Direction.DOWN);
+        luis.turnHead(HeadPosition.TO_SIDE);
+        luis.feel(wind.touch(luis));
+        luis.see(dgud,world);
+        luis.walk(way,Place.PLAIN_1);
         branch.makeSound();
-       try{
-           l.hear(branch);}
-       catch (LowSoundException e){
-           System.out.println(e.getMessage());
-       }
-        l.move();
-        l.fall();
-        l.sigh();
+        luis.hear(branch,luis);
+
+        luis.fall();
+        luis.sigh();
 
     }
 }

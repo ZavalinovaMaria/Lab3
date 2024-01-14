@@ -1,17 +1,27 @@
 package subject;
 
-import humans.enums.Body;
+import humans.enums.*;
 import humans.Human;
-import subject.interfaces.Touch;
+import subject.interfaces.*;
 
 public class Wind  implements Touch {
-    public Wind(){}
-
-    public void howl(Tree.Branch branch, Tree tree){
-        System.out.println("'УУУУУ'-  только дико завывал "+this+" в "+branch.anotherForm()+" вокруг "+tree);
+    double volume;
+    double power;
+    public Wind(){
+        volume = 0.0;
+        power = 1.0;
     }
-    public void touch(Human human){
-        System.out.println(this+" взметнул "+Body.HAIR);
+    public void howl(Tree.Branch branch, Tree tree){
+        volume = Math.random();
+        System.out.printf("'УУУУУ'-  только дико завывал %s в %s вокруг %s",this,branch.anotherForm(),tree);
+    }
+    public boolean touch(Human human){
+        power +=  Math.random();
+        if(power>1.5) {
+            Body.HAIR.setAnotherPosition("взъерошенные");
+            System.out.printf("%s взметнул %s",this,Body.HAIR);
+        return true;}
+        else return false;
     }
     @Override
     public String toString(){

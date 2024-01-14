@@ -5,43 +5,60 @@ import subject.interfaces.MakeSound;
 public class Tree implements MakeSound {
     String title;
     public double volume;
-    public Tree(String title,double volume){
+    public int perscentOfIllumination = 0;
+
+    public Tree(String title, double volume) {
         this.title = title;
         this.volume = volume;
     }
-    public  class Trunk extends Tree {
-        public Trunk(String title,double volume){
-            super(title,volume);
+
+    public class Trunk extends Tree {
+        public Trunk(String title, double volume) {
+            super(title, volume);
         }
+
         @Override
         public String toString() {
             return "стволах";
         }
     }
-    public class Branch extends Tree  {
-        public Branch(String title,double volume) {
-            super(title,volume);
+
+    public class Branch extends Tree {
+        public Branch(String title, double volume) {
+            super(title, volume);
         }
 
         @Override
         public String toString() {
             return "веток";
         }
-        public String anotherForm(){
+
+        public String anotherForm() {
             return "ветвях";
         }
     }
-    public void makeSound(){
-         class Noise{
-             final double probability;
-            Noise(){
-                probability= Math.random();
+
+    public void makeSound() {
+        class Noise {
+            final double probability;
+            Noise() {
+                probability = Math.random();
             }
         }
         Noise silence = new Noise();
-        volume= volume*(1- silence.probability);
+        volume = volume * (1 - silence.probability);
     }
 
+
+
+    public int getPerscentOfIllumination(){
+        return perscentOfIllumination;
+    }
+
+    public void setPerscentOfIllumination(int lightCharacteristic) {
+        perscentOfIllumination = getPerscentOfIllumination()+lightCharacteristic;
+
+    }
 
     @Override
     public String toString() {

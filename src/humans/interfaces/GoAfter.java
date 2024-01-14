@@ -1,5 +1,7 @@
 package humans.interfaces;
 import humans.Human;
+import world.Way;
+
 public interface GoAfter {
-    void goAfter(Human h1,Human h2);
+    void goAfter(Way way,Human h1, Human h2);
 }

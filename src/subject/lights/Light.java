@@ -1,24 +1,58 @@
 package subject.lights;
 
+import subject.Subjects;
+import subject.Tree;
 import world.Place;
 import humans.Human;
+
+import java.util.ArrayList;
 
 public abstract class Light {
     protected int brightness;
     String name;
-    protected int T;
+    protected int period;
+    protected int time;
 
-    public Light(String name) {
+    public Light(String name,int time) {
         this.name = name;
+        this.time = time;
     }
 
+    public void shineToTree(Tree tree) {
+            tree.setPerscentOfIllumination(brightness-5);
+            System.out.printf("Прoцент освещенности: %s %s ",tree,tree.getPerscentOfIllumination());
+            ArrayList<Integer> illumination = new ArrayList<>();
+            if (period==1){
+            while(illumination.size()<time){
+            illumination.add(brightness);
+            illumination.add(0);}}
+            else{
+                while (illumination.size()+1 < time) {
+                    illumination.add(brightness);}
+            }
+        System.out.println(illumination);
+    }
+    public void shineToSubject(Subjects subject) {
+        subject.setPerscentOfIllumination(brightness);
+        System.out.printf("Прoцент освещенности: %s %s", subject, subject.getPerscentOfIllumination());
+        ArrayList<Integer> illumination = new ArrayList<>();
+        if(period == 1){
+        while (illumination.size()+1 < time) {
+            illumination.add(brightness);
+            illumination.add(0);}}
+        else{
+            while (illumination.size()+1 < time) {
+                illumination.add(brightness);}
+        }
+        System.out.println(illumination);
+    }
     public String lightCharacteristic() {
-        if (brightness > 100 && T >= 1) {
+        if (brightness > 10 && period == 1) {
             return "ярко светит мелькая";
         } else {
-            if (brightness > 100) {
+            if (brightness > 10) {
                 return "ярко светит";
-            } else if (T >= 0) {
+            } else if (period == 1) {
                 return "мелькая светит";
             } else {
                 return " светит ";
@@ -26,38 +60,41 @@ public abstract class Light {
         }
     }
 
-    public static class Spot {
-        private int size;
-        private int brightness;
 
-        public Spot(int size, int brightness) {
+    public static class Spot {
+        private double size;
+        private double brightness;
+
+        public Spot(double size, double brightness) {
             this.brightness = brightness;
             this.size = size;
         }
 
-        public int getSize() {
+        public double getSize() {
             return size;
         }
 
-        public int getBrightness() {
+        public double getBrightness() {
             return brightness;
         }
 
-        public void setSize(int size) {
+        public void setSize(double size) {
             this.size = size;
         }
 
-        public void setBrightness(int brightness) {
+        public void setBrightness(double brightness) {
             this.brightness = brightness;
         }
 
-        public void newView(Human h, Human h1) {
-            if (h.equals(h1) && h.getPlace() == Place.FLASHLIGHT) {
-                setBrightness(getBrightness() + 10);
-                setSize(getSize() - 2);
-                System.out.println(this + "стало меньше(" + size + ") и  еще ярче(" + brightness + ")");
+        public void newView(Human firstHuman, Human secondHuman) {
+            if (firstHuman.equals(secondHuman) && firstHuman.getPlace() == Place.FLASHLIGHT) {
+                setBrightness(getBrightness() +Math.random()+2);
+                setSize(getSize() - Math.random()+22);
+                System.out.printf("%s стало меньше (%s) и  еще ярче(%s)",this,size,brightness);
+
+
             } else {
-                System.out.println(this + " осталось неизменным");
+                System.out.printf( "%s осталось неизменным",this);
 
             }
 

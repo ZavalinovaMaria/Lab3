@@ -12,7 +12,7 @@ public class World {
     public Day_time time;
     public World(Day_time time){
         this.time = time;
-        System.out.println(this+"Тукущее ремя суток "+ time.toString());
+        System.out.println(String.format(" %s Тукущее ремя суток %s ",this, time.toString()));
 
     }
 
@@ -20,15 +20,11 @@ public class World {
         for (Human human : h) {
             humans.add(human);
             sizeOfHumans++;
-            human.checkplace();
+            human.checkPlace();
         }
-
     }
-
     public void putPlaces(Place... p) {
-        for (Place place : p) {
-            places.add(place);
-        }
+        for (Place place : p) {places.add(place);}
     }
     public void setTime(Day_time time){
         this.time = time;
@@ -37,7 +33,7 @@ public class World {
         return time;}
 
 
-    public void newDayTime(){
+    public void newDayTime(Human...h){
         if(getTime()==Day_time.MORNING){
             setTime(Day_time.AFTERNOON);
         }
@@ -49,13 +45,14 @@ public class World {
         }
         else {
             setTime(Day_time.MORNING);
+            for (Human human : h) {
+                human.brainSignals.clear();
+            }
+
         }
-        System.out.println("Текущее время суток:"+time);
+
+        System.out.println(String.format("Текущее время суток: %s",time));
     }
-
-
-
-
 
     @Override
     public String toString() {

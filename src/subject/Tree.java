@@ -7,14 +7,16 @@ public class Tree implements MakeSound {
     public double volume;
     public int perscentOfIllumination = 0;
 
-    public Tree(String title, double volume) {
-        this.title = title;
+    public Tree(double volume) {
+        this.title = "деревья";
         this.volume = volume;
     }
 
     public class Trunk extends Tree {
-        public Trunk(String title, double volume) {
-            super(title, volume);
+        public Trunk(double volume) {
+            super( volume);
+            this.title ="ствол";
+
         }
 
         @Override
@@ -24,10 +26,10 @@ public class Tree implements MakeSound {
     }
 
     public class Branch extends Tree {
-        public Branch(String title, double volume) {
-            super(title, volume);
+        public Branch( double volume) {
+            super(volume);
+            this.title ="ветка";
         }
-
         @Override
         public String toString() {
             return "веток";
@@ -37,7 +39,6 @@ public class Tree implements MakeSound {
             return "ветвях";
         }
     }
-
     public void makeSound() {
         class Noise {
             final double probability;
@@ -49,17 +50,13 @@ public class Tree implements MakeSound {
         volume = volume * (1 - silence.probability);
     }
 
-
-
     public int getPerscentOfIllumination(){
         return perscentOfIllumination;
     }
-
     public void setPerscentOfIllumination(int lightCharacteristic) {
         perscentOfIllumination = getPerscentOfIllumination()+lightCharacteristic;
 
     }
-
     @Override
     public String toString() {
         return "деревьев";

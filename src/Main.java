@@ -17,9 +17,9 @@ public class Main {
         Light.Spot spot = new Light.Spot(30,100);
 
         Brushwood brushwood = new Brushwood();
-        Tree trees = new Tree("деревья",30);
-        Tree.Trunk trunk = trees.new Trunk("ствол",10);
-        Tree.Branch branch = trees.new Branch("ветка",5);
+        Tree trees = new Tree(30);
+        Tree.Trunk trunk = trees.new Trunk(10);
+        Tree.Branch branch = trees.new Branch(5);
         Wind wind = new Wind();
 
         world.putPlaces(Place.BORDER,Place.TOP,Place.CENTRE_OF_HEAP,Place.FLASHLIGHT);
@@ -32,15 +32,13 @@ public class Main {
         Subjects bones= new Subjects("костей ",21);
         Subjects ball = new Subjects("мяч ",16);
 
-        Luis.RightArm arm1 =  luis. new RightArm();
-        Luis.LeftArm arm2 =  luis. new LeftArm();
         try{
-            luis.takeToArm(arm1,bag,ball);
+            luis.takeToRightArm(bag,ball);
         }catch (InvalidValueException e){
             System.out.println(e.getMessage());
         }
         try{
-            luis.takeToArm(arm2,shovel,bones);
+            luis.takeToLeftArm(shovel,bones);
         } catch (InvalidValueException e){
             System.out.println(e.getMessage());
         }
@@ -57,6 +55,7 @@ public class Main {
         dgud.know(way,Place.TOP);
         dgud.walk(way,Place.TOP);
         luis.goAfter(way,luis,dgud);
+
         luis.look();
         brushwood.applyDamage(luis);
         trunk.makeSound();
@@ -73,13 +72,14 @@ public class Main {
 
         ray.shine(branch);
         luis.stand(trunk);
-        luis.turnHead(HeadPosition.DOWN);
+        luis.turnHead(Direction.DOWN);
         luis.look();
-        luis.replaceSubjects(arm1,arm2);
+        luis.replaceSubjects();
 
-        luis.turnHead(HeadPosition.TO_SIDE);
+        luis.turnHead(Direction.LEFT);
         luis.feel(wind.touch(luis));
         luis.see(dgud,world);
+        luis.turnHead(Direction.STRAIGHT);
         luis.walk(way,Place.PLAIN_1);
         branch.makeSound();
         luis.hear(branch,luis);

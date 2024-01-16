@@ -1,7 +1,8 @@
 package humans.interfaces;
 
-import humans.enums.HeadPosition;
+import humans.Human;
+import humans.enums.Direction;
 
 public interface TurnHead {
-     void turnHead(HeadPosition position);
+     void turnHead(Direction direction);
 }

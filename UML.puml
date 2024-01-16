@@ -1,16 +1,4 @@
 @startuml
-enum humans.enums.Body {
-+  LEGS
-+  CHEST
-+  HAIR
-- String bodypart
-- String defaultPosition
-- String anotherPosition
-+ String toString()
-+ void setAnotherPosition(String)
-+ String getDefaultPosition()
-+ String getAnotherPosition()
-}
 interface humans.interfaces.CheckBrain {
 ~ void checkBrainSignals()
 }
@@ -55,7 +43,12 @@ abstract class humans.Human {
 # int health
 # Condition condition
 # Place place
-# HeadPosition position
+# Head head
+# LeftArm leftArm
+# RightArm rightArm
+# Leg rightLeg
+# Leg leftLeg
+# Lungs lungs
 # boolean knowledge
 + ArrayList<Integer> brainSignals
 ~ Medicine pill
@@ -73,14 +66,15 @@ abstract class humans.Human {
 + void setY(int)
 + boolean getKnowledge()
 + void setKnowledge(boolean)
-+ HeadPosition getHeadPosition()
-+ void setHeadPosition(HeadPosition)
-+ void turnHead(HeadPosition)
++ void takeRequirement()
++ void checkRequirement()
++ void turnHead(Direction)
 + void go(Direction)
 + void checkPlace()
 + void checkUnknownPlace()
 + {abstract}void walk(Way,Place)
 + {abstract}void stand(Tree)
++ {abstract}void fall()
 + void wakeUp()
 + void know(Way,Place)
 + void feel(boolean)
@@ -89,9 +83,15 @@ abstract class humans.Human {
 + void checkHealth()
 + void takePill()
 + void checkBrainSignals()
-+ void takeToArm(Human.RightArm,Subjects)
-+ void takeToArm(Human.LeftArm,Subjects)
-+ void replaceSubjects(Human.RightArm,Human.LeftArm)
++ void takeToRightArm(Subjects)
++ void takeToLeftArm(Subjects)
++ void replaceSubjects()
++ RightArm getRightArm()
++ LeftArm getLeftArm()
++ Leg getLeftLeg()
++ Leg getRightLeg()
++ Lungs getLungs()
++ Head getHead()
 + String toString()
 + int hashCode()
 + boolean equals(Object)
@@ -100,16 +100,40 @@ interface humans.Human$Medicine {
 ~ void recoverHealth()
 }
 class humans.Human$LeftArm {
-+ ArrayList<Subjects> leftArms
-~ {static} int count
-+ void checkCountL()
++ ArrayList<Subjects> leftArmsSubjects
 + void haveSubject(Subjects)
 }
 class humans.Human$RightArm {
-+ ArrayList<Subjects> rightArms
++ ArrayList<Subjects> rightArmsSubjects
 ~ {static} int count
 + void checkCountR()
 + void haveSubject(Subjects)
+}
+class humans.Human$Head {
+# double degreeToSide
+# double degreeUpDown
++ double getDegreeToSide()
++ double getDegreeUpDown()
++ void setDegreeToSide(double)
++ void setDegreeUpDown(double)
+}
+class humans.Human$Leg {
+# double heightLift
+# double degrees
+# double distanceToAnotherLeg
++ double getHeightLift()
++ void setHeightLift(double)
++ double getDegrees()
++ void setDegrees(double)
++ double getDistanceToAnotherLeg()
++ void setDistanceToAnotherLeg(double)
++ void setDistanceBetweenLegs(Leg,double)
++ String toString()
+}
+class humans.Human$Lungs {
+~ int volume
++ int getVolume()
++ void setVolume(int)
 }
 abstract class subject.lights.Light {
 # int brightness
@@ -163,6 +187,11 @@ enum humans.enums.Condition {
 interface subject.interfaces.ApplyDamage {
 ~ void applyDamage(Human)
 }
+interface humans.interfaces.TakeToArm {
+~ void takeToRightArm(Subjects)
+~ void takeToLeftArm(Subjects)
+~ void replaceSubjects()
+}
 class subject.lights.FakeLight {
 + void shine(Subjects,Tree,Tree.Branch)
 }
@@ -174,14 +203,6 @@ class exception.LowSoundException {
 }
 interface humans.interfaces.GoAfter {
 ~ void goAfter(Way,Human,Human)
-}
-enum humans.enums.HeadPosition {
-+  STRAIGHT
-+  DOWN
-+  BACK
-+  TO_SIDE
-- String position
-+ String toString()
 }
 interface humans.interfaces.Fall {
 ~ void fall()
@@ -205,6 +226,7 @@ enum humans.enums.Direction {
 +  LEFT
 +  RIGHT
 +  UP
++  STRAIGHT
 +  DOWN
 }
 enum world.Day_time {
@@ -216,7 +238,7 @@ enum world.Day_time {
 + String toString()
 }
 interface humans.interfaces.TurnHead {
-~ void turnHead(HeadPosition)
+~ void turnHead(Direction)
 }
 interface humans.interfaces.Know {
 ~ {abstract}void know(Way,Place)
@@ -289,19 +311,22 @@ humans.Know <|.. humans.Human
 humans.CheckBrain <|.. humans.Human
 humans.CheckLocation <|.. humans.Human
 humans.CheckHealth <|.. humans.Human
+humans.Fall <|.. humans.Human
+humans.TakeToArm <|.. humans.Human
 humans.Human +.. humans.Human$Medicine
 humans.Human +.. humans.Human$LeftArm
 humans.Human +.. humans.Human$RightArm
+humans.Human +.. humans.Human$Head
+humans.Human +.. humans.Human$Leg
+humans.Human +.. humans.Human$Lungs
 subject.lights.Light +.. subject.lights.Light$Spot
 subject.Touch <|.. subject.Wind
 exception.RuntimeException <|-- exception.HumanWithoutPlaceException
 subject.lights.Light <|-- subject.lights.FakeLight
 exception.Exception <|-- exception.LowSoundException
 exception.Exception <|-- exception.InvalidValueException
-humans.interfaces.Fall <|.. humans.Dgud
 humans.Human <|-- humans.Dgud
 humans.Sigh <|.. humans.Luis
-humans.Fall <|.. humans.Luis
 humans.Look <|.. humans.Luis
 humans.GoAfter <|.. humans.Luis
 humans.Human <|-- humans.Luis

@@ -7,14 +7,20 @@ import subject.*;
 import exception.*;
 import java.util.ArrayList;
 import java.util.Objects;
-public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,CheckBrain,CheckLocation,CheckHealth {
+public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,CheckBrain,CheckLocation,CheckHealth,Fall,TakeToArm {
     public final String name;
     private int x;
     private int y;
     protected int health;
     protected Condition condition;
     protected Place place;
-    protected HeadPosition position;
+    protected Head head;
+    protected LeftArm leftArm;
+    protected RightArm rightArm;
+    protected Leg rightLeg;
+    protected Leg leftLeg;
+    protected Lungs lungs;
+
     protected boolean knowledge = false;
     public ArrayList<Integer> brainSignals;
     {brainSignals= new ArrayList<>();}
@@ -25,7 +31,12 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
         this.y = y;
         health = 100;
         condition = Condition.GOOD;
-        position = HeadPosition.STRAIGHT;
+        head = new Head();
+        leftArm = new LeftArm();
+        rightArm = new RightArm();
+        rightLeg = new Leg();
+        leftLeg = new Leg();
+        lungs = new Lungs();
     }
 
     public String getName() {
@@ -75,38 +86,51 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
     public void setKnowledge(boolean knowledge){
         this.knowledge =knowledge;
     }
+    public void takeRequirement() throws InvalidValueException{
+        if (getCondition() == Condition.SLEEP) throw new InvalidValueException(String.format("Человек не может нормально функционировать"));
+        else if(health<0) checkHealth();
+    }
+    public void checkRequirement(){
+        try{
+            takeRequirement();
+        } catch (InvalidValueException e){
+            System.out.println(e.getMessage());}}
 
-    public HeadPosition getHeadPosition() {
-        return position;
-    }
-    public void setHeadPosition(HeadPosition position) {
-        this.position = position;
-    }
-    public void turnHead(HeadPosition position) {
-        if (health > 0 && getCondition() != Condition.SLEEP) {
-            switch (position) {
-                case BACK -> {
-                    setHeadPosition(HeadPosition.BACK);
-                    System.out.printf(" %s повернул голову %s ",name, HeadPosition.BACK);
+    public void turnHead(Direction direction) {
+        checkRequirement();
+            switch (direction) {
+                case RIGHT -> {
+                    double degree = Math.random()*(90.00-20)+20.0;
+                    head.setDegreeToSide(degree);
                 }
-                case TO_SIDE -> {
-                    setHeadPosition(HeadPosition.TO_SIDE);
-                    System.out.printf( "%s повернул лицо в сторону ",name);
+                case LEFT -> {
+                    double degree = -Math.random()*(90.00-20)-20.0;
+                    head.setDegreeToSide(degree);
                 }
                 case DOWN -> {
-                    setHeadPosition(HeadPosition.DOWN);
-                    System.out.printf("Голова %s опущена %s ",name, HeadPosition.DOWN);
+                    double degree = -Math.random()*(90.00-30)-30.0;
+                    head.setDegreeUpDown(degree);
                 }
-                case STRAIGHT -> {
-                    setHeadPosition(HeadPosition.STRAIGHT);
-                    System.out.printf( " голова %s находится в обычном положении",name);
+                case UP -> {
+                    double degree = Math.random()*(90.00-30)+30.0;
+                    head.setDegreeUpDown(degree);
+                }
+                case STRAIGHT ->{
+                        double degreeToSide = Math.random()*(20.0-(-20.0))-20.0;
+                        double degree = Math.random()*(30.0-(-30.0)) -30.0;
+                        head.setDegreeToSide(degreeToSide);
+                        head.setDegreeUpDown(degree);
                 }
             }
         }
-    }
+
 
     public void go(Direction direction) {
-        if (health >= 0 && getCondition() != Condition.SLEEP) {
+        checkRequirement();
+            leftLeg.setDegrees(15.0);
+            rightLeg.setDegrees(13.0);
+            double distance = Math.sin(leftLeg.degrees+rightLeg.degrees);
+            rightLeg.setDistanceBetweenLegs(leftLeg,distance);
             switch (direction) {
                 case LEFT -> {
                     setX(getX() - 1);
@@ -119,15 +143,19 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
                 case UP -> {
                     setX(getX());
                     setY(getY() + 1);
+                    leftLeg.setHeightLift(Math.random()*20);
+                    rightLeg.setHeightLift(Math.random()*20);
                 }
                 case DOWN -> {
                     setX(getX());
                     setY(getY() - 1);
+                    leftLeg.setHeightLift(Math.random()*5);
+                    rightLeg.setHeightLift(Math.random()*5);
                 }
             }
             checkPlace();
         }
-    }
+
     public void checkPlace() {
         setPlace(null);
         Place[] places = Place.values();
@@ -145,6 +173,7 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
     }
     public abstract void walk(Way way, Place place);
     public abstract void stand(Tree tree);
+    public abstract void fall();
 
     public void wakeUp(){
         setCondition(Condition.GOOD);
@@ -152,7 +181,7 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
 
     public void  know (Way way, Place place) {
         int control = 0;
-        if (health >= 0 && getCondition() != Condition.SLEEP) {
+        checkRequirement();
             int startIndex = 0;
             switch (place) {
                 case TOP -> {
@@ -168,7 +197,7 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
                     if (getPlace() == Place.MIDDLE_SLOPE) {
                         startIndex = 3;
                     }
-                    System.out.printf(" %s знает путь до точки назначения:",name);
+                    System.out.printf(" %s знает путь до точки назначения:", name);
                     for (int i = startIndex; i < way.wayFromCentreToTop.size(); i++) {
                         System.out.print(way.wayFromCentreToTop.get(i) + ", ");
                         control++;
@@ -184,14 +213,13 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
                     if (getPlace() == Place.RIGHT_SLOPE) {
                         startIndex = 2;
                     }
-                    System.out.printf(" %s знает путь до точки назначения:",name);
+                    System.out.printf(" %s знает путь до точки назначения:", name);
                     for (int i = startIndex; i < way.wayFromTopToPlain.size(); i++) {
                         System.out.print(way.wayFromTopToPlain.get(i) + ",");
                         control++;
                     }
                 }
             }
-        }
         System.out.println();
         if (control != 0) setKnowledge(true);
         else setKnowledge(false);
@@ -203,6 +231,7 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
         if(touch ==true){ brainSignals.add(1);answer =" ";}
         else {brainSignals.add(0); answer =" не ";}
         System.out.printf("%s %S почувствовал это",name,answer);
+        checkBrainSignals();
     }
 
     public void hearSound(Tree tree) throws LowSoundException {
@@ -222,6 +251,7 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
             human.setHealth(-30);}
             else System.out.println(e.getMessage());
         }
+        finally {checkBrainSignals();}
     }
 
     public void checkHealth() {
@@ -262,85 +292,161 @@ public abstract class Human implements TurnHead, Go, Hear, BrainActions,Know,Che
         }
     }
 
-    public  class LeftArm {
-        public ArrayList<Subjects> leftArms;
-        static int count = 0;
+    private  class LeftArm {
+        public ArrayList<Subjects> leftArmsSubjects;
+
         {
-            try {
-                checkCountL();
-            } catch (InvalidValueException e) {
-                System.out.println(e.getMessage());
-            }
+            this.leftArmsSubjects = new ArrayList<>();
         }
 
-        public void checkCountL() throws InvalidValueException {
-            if (count >= world.World.sizeOfHumans)
-                throw new InvalidValueException(String.format("У %s уже есть подобная  рука", name));
-            else {
-                leftArms = new ArrayList<>();
-                count++;
-            }
-        }
-        public void haveSubject(Subjects s) {leftArms.add(s);}
+        public void haveSubject(Subjects subject) {leftArmsSubjects.add(subject);}
     }
 
 
-    public class RightArm {
-        public ArrayList<Subjects> rightArms;
+    private class RightArm {
+        public ArrayList<Subjects> rightArmsSubjects;
         static int count = 0;
-        {
-            try {checkCountR();}
-            catch (InvalidValueException e) {
-                System.out.println(e.getMessage());}
-        }
+        {this.rightArmsSubjects = new ArrayList<>();}
         public void checkCountR() throws InvalidValueException {
             if (count >= world.World.sizeOfHumans)
                 throw new InvalidValueException(String.format("У %s уже есть подобная  рука", name));
             else {
-                rightArms = new ArrayList<>();
+                rightArmsSubjects = new ArrayList<>();
                 count++;
             }
         }
 
         public void haveSubject(Subjects s) {
-            rightArms.add(s);
+            rightArmsSubjects.add(s);
         }
     }
-        public void takeToArm(Human.RightArm arm, Subjects... s) throws InvalidValueException {
-            if (health >= 0 && getCondition() != Condition.SLEEP) {
+        public void takeToRightArm(Subjects... s) throws InvalidValueException {
+            checkRequirement();
                 int weight = 0;
                 for (Subjects subjects : s) {
                     weight += subjects.getWeight();
                     if (weight >= 20) throw new InvalidValueException(String.format("%s столько не унесет", name));
                     else {
-                        arm.haveSubject(subjects);
+                        rightArm.haveSubject(subjects);
                     }
-                    System.out.printf("В правой руке  %s теперь есть %s ", name, arm.rightArms);
+                    System.out.printf("В правой руке  %s теперь есть %s ", name, rightArm.rightArmsSubjects);
                 }
             }
-        }
 
-        public void takeToArm(Human.LeftArm arm, Subjects... s) throws InvalidValueException {
-            if (health >= 0 && getCondition() != Condition.SLEEP) {
+
+        public void takeToLeftArm(Subjects... s) throws InvalidValueException {
+            checkRequirement();
                 int weight = 0;
                 for (Subjects subjects : s) {
                     weight += subjects.getWeight();
                     if (weight >= 30) throw new InvalidValueException(String.format("%s столько не унесет", name));
                     else {
-                        arm.haveSubject(subjects);
+                        leftArm.haveSubject(subjects);
                     }
-                    System.out.printf("В левой руке %s теперь есть %s ", name, arm.leftArms);
+                    System.out.printf("В левой руке %s теперь есть %s ", name, leftArm.leftArmsSubjects);
                 }
             }
-        }
 
-    public void replaceSubjects(Human.RightArm arm1, Human.LeftArm arm2) {
-        if (health > 0 && getCondition() != Condition.SLEEP) {
-            ArrayList<Subjects> help = new ArrayList<>(arm1.rightArms);
-            arm1.rightArms = arm2.leftArms;
-            arm2.leftArms = help;
+
+    public void replaceSubjects() {
+        checkRequirement();
+            ArrayList<Subjects> help = new ArrayList<>(rightArm.rightArmsSubjects);
+            rightArm.rightArmsSubjects = leftArm.leftArmsSubjects;
+            leftArm.leftArmsSubjects = help;
             System.out.printf("%s преложил вещи из одной руки в другую", name);
         }
+
+
+    protected class Head{
+        protected double degreeToSide;
+        protected double degreeUpDown;
+        {
+            degreeToSide = 0.0;
+            degreeUpDown =0.0;
+        }
+        public double getDegreeToSide(){
+            return degreeToSide;
+        }
+        public double getDegreeUpDown() {
+            return degreeUpDown;
+        }
+        public void setDegreeToSide(double degree){
+            this.degreeToSide = degree;
+        }
+        public void setDegreeUpDown(double degree) {
+            this.degreeUpDown = degree;
+        }
+    }
+    protected class Leg{
+        protected double  heightLift;
+        protected double degrees;
+        protected double distanceToAnotherLeg;
+        {
+            heightLift = 5.0;
+            degrees =0.0;
+            distanceToAnotherLeg =0;
+        }
+        public double getHeightLift() {
+            return heightLift;
+        }
+        public void setHeightLift(double height) {
+            this.heightLift = height;
+        }
+
+        public double getDegrees() {
+            return degrees;
+        }
+        public void setDegrees(double degrees) {
+            this.degrees = degrees;
+        }
+        public  double getDistanceToAnotherLeg(){
+            return distanceToAnotherLeg;
+        }
+        public void setDistanceToAnotherLeg(double distance){
+            this.distanceToAnotherLeg = distance;
+        }
+        public void setDistanceBetweenLegs(Leg second, double distance){
+            this.setDistanceToAnotherLeg(distance);
+            second.setDistanceToAnotherLeg(distance);
+        }
+        @Override
+        public String toString(){
+            return "ноги";
+        }
+    }
+    protected class Lungs{
+        int volume;
+        {volume = 2500;}
+        public int getVolume() {
+            return volume;
+        }
+        public void setVolume(int volume) {
+            this.volume = getVolume()+volume;
+        }
+    }
+
+    public RightArm getRightArm() {
+        return rightArm;
+    }
+
+    public LeftArm getLeftArm() {
+        return leftArm;
+    }
+
+    public Leg getLeftLeg() {
+        return leftLeg;
+    }
+
+    public Leg getRightLeg() {
+        return rightLeg;
+    }
+
+    public Lungs getLungs() {
+        return lungs;
+    }
+
+    public Head getHead() {
+        return head;
     }
 
     @Override

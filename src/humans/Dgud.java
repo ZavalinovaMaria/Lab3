@@ -6,7 +6,7 @@ import subject.*;
 import subject.lights.Light;
 import world.*;
 
-public class Dgud extends Human implements Fall {
+public class Dgud extends Human  {
 
     public Dgud( int x, int y) {
         super("Dgud", x, y);
@@ -15,11 +15,15 @@ public class Dgud extends Human implements Fall {
 
     @Override
     public void stand(Tree tree) {
-        if (health >= 0 && getCondition()!=Condition.SLEEP) {
-            System.out.printf( "%s стоит на %s",name, getPlace());}}
+        checkRequirement();
+        leftLeg.setDegrees(Math.random() * (40 - 10) + 30.0);
+        rightLeg.setDegrees(Math.random() * (40 - 35) + 20.0);
+        double distance = 60 * (Math.abs(Math.sin(rightLeg.getDegrees() + leftLeg.getDegrees())));
+        leftLeg.setDistanceBetweenLegs(rightLeg, distance);
+        System.out.printf( "%s стоит на %s",name, getPlace());}
 
     public void see(World world,Light.Spot spot,Human me,Human another) {
-        if (health >= 0 && getCondition()!=Condition.SLEEP) {
+        checkRequirement();
             if (world.getTime() == Day_time.EVENING || world.getTime() == Day_time.NIGHT) {
                 System.out.printf( "%s видит, что ",name);
                 spot.newView(me,another);
@@ -30,12 +34,11 @@ public class Dgud extends Human implements Fall {
                 int signal = 0;
                 brainSignals.add(signal);
             }
-        }
         System.out.println();
     }
     @Override
     public void walk(Way way, Place place) {
-        if (health >= 0 && getCondition() != Condition.SLEEP) {
+        checkRequirement();
             if(getKnowledge() == true) {setCondition(Condition.CONFIDENCE);}
             else {setCondition(Condition.UNSERTAIN);}
             int startIndex = 0;
@@ -65,9 +68,11 @@ public class Dgud extends Human implements Fall {
                 }
             }
         }
-    }
-    public void fall() {
-        if (health > 0) {
+
+
+   @Override
+   public void fall() {
+        checkRequirement();
             double damage = 40 * getCondition().getReceptivity();
             setHealth(-damage);
             checkHealth();
@@ -75,7 +80,7 @@ public class Dgud extends Human implements Fall {
     }
 
 
-}
+
 
 
 
